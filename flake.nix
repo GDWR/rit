@@ -8,9 +8,15 @@
     flake-utils.lib.eachDefaultSystem (system: 
       let 
         pkgs = nixpkgs.legacyPackages.${system};
+        manifest = (pkgs.lib.importTOML ./Cargo.toml).package;
       in rec {
-        packages.hello = pkgs.hello;
-        packages.default = packages.hello;
+        packages.rit = pkgs.rustPlatform.buildRustPackage {
+          pname = manifest.name;
+          version = manifest.version;
+          src = pkgs.lib.cleanSource ./.;
+          cargoLock.lockFile = ./Cargo.lock;
+        };
+        packages.default = packages.rit;
 
         devShells.default = pkgs.mkShell {
           buildInputs = [ pkgs.cargo pkgs.rustc ];
