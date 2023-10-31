@@ -20,6 +20,7 @@
 
         devShells.default = pkgs.mkShell {
           buildInputs = [ pkgs.cargo pkgs.rustc pkgs.rust-analyzer ];
+          RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
         };
       }
     );
