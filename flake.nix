@@ -19,7 +19,7 @@
         packages.default = packages.rit;
 
         devShells.default = pkgs.mkShell {
-          buildInputs = [ pkgs.cargo pkgs.rustc ];
+          buildInputs = [ pkgs.cargo pkgs.rustc pkgs.rust-analyzer ];
         };
       }
     );
