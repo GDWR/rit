@@ -1,12 +1,38 @@
 #[macro_use]
 extern crate rocket;
-use std::{fs::create_dir, path::PathBuf};
+use std::{fs::create_dir, path::PathBuf, vec};
 
+use rit::Repositories;
 use rocket::{fs::NamedFile, log, State};
+use rocket_dyn_templates::Template;
+use serde::Serialize;
+
+#[derive(Serialize)]
+struct Namespace {
+    name: String,
+    repositories: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct IndexContext {
+    namespaces: Vec<Namespace>,
+}
 
 #[get("/")]
-fn index() -> &'static str {
-    "welcome to rit!"
+fn index(repositories: &State<Repositories>) -> Result<Template, std::io::Error> {
+    Ok(Template::render(
+        "index",
+        IndexContext {
+            namespaces: repositories
+                .all_namespaces()?
+                .iter()
+                .map(|name| Namespace {
+                    name: name.to_string(),
+                    repositories: repositories.all_projects(name).unwrap_or(Vec::new()),
+                })
+                .collect(),
+        },
+    ))
 }
 
 #[get("/<owner>/<repo>/<path..>")]
@@ -41,5 +67,7 @@ fn rocket() -> _ {
         .manage(Config {
             repository: repository_path.clone(),
         })
+        .manage(Repositories::new(repository_path.clone()))
         .mount("/", routes![index, git])
+        .attach(Template::fairing())
 }

@@ -1,0 +1,20 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>rit</title>
+</head>
+
+<body>
+<h1>Welcome to rit!</h1>
+
+{{#each namespaces}}
+  <h2>{{name}}</h2>
+  <ul>
+    {{#each repositories}}
+    <li>{{this}}</li>
+    {{/each}}
+  </ul>
+{{/each}}
+</body>
+
+</html> 
