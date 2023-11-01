@@ -35,11 +35,16 @@ fn index(repositories: &State<Repositories>) -> Result<Template, std::io::Error>
     ))
 }
 
-#[get("/<owner>/<repo>/<path..>")]
-async fn git(config: &State<Config>, owner: &str, repo: &str, path: PathBuf) -> Option<NamedFile> {
+#[get("/<namespace>/<repo>/<path..>")]
+async fn git(
+    config: &State<Config>,
+    namespace: &str,
+    repo: &str,
+    path: PathBuf,
+) -> Option<NamedFile> {
     let requested_path = config
         .repository
-        .join(owner)
+        .join(namespace)
         .join(repo)
         .join(".git")
         .join(path);
