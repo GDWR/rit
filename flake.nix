@@ -19,7 +19,7 @@
         packages.default = packages.rit;
 
         devShells.default = pkgs.mkShell {
-          buildInputs = [ pkgs.cargo pkgs.rustc pkgs.rust-analyzer pkgs.clippy ];
+          buildInputs = [ pkgs.cargo pkgs.rustc pkgs.rust-analyzer pkgs.clippy pkgs.rustfmt ];
           RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
         };
       }
